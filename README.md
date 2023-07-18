@@ -26,8 +26,8 @@ This project uses [Ansible Vault](https://docs.ansible.com/ansible/latest/vault_
 ### Deployment
 #### Preparing SSH-Agent
 Ensure ssh-agent is operational by running:
-```
-pkill ssh-agent && eval `ssh-agent` && ssh-add ~/.ssh/id_rsa.
+```sh
+pkill ssh-agent && eval `ssh-agent` && ssh-add ~/.ssh/id_rsa
 ```
 
 Update your .ssh/config to enable KeyForwarding to your host. See [GitHub's SSH agent forwarding guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/using-ssh-agent-forwarding).
