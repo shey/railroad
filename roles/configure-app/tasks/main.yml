@@ -1,0 +1,20 @@
+- name: create directory for .env file
+  ansible.builtin.file:
+    path: "{{ app_settings_dir }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+
+- name: update env settings for the rails app
+  template:
+    src:    env.j2
+    dest:   "{{ app_settings_dir }}/.env"
+    owner:  "{{ app_user }}"
+    group:  "{{ app_user }}"
+    mode:   0640
+  tags: ['postgresql-config', 'app-config']
+
+- name: reload the rails app
+  command: "sudo /usr/sbin/service unicorn reload"
+  when: force_reload is defined
+  tags: ['app-config']

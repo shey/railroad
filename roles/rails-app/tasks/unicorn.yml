@@ -1,0 +1,39 @@
+- name: there can be only one 'rails_env'
+  template:
+    src: rails_env.sh.j2
+    dest: /etc/profile.d/rails_env.sh
+    owner: root
+    group: root
+    mode: 0755
+  tags: ['unicorn-config', 'rails-env']
+
+- name: Add unicorn config
+  template:
+    src: unicorn.cfg.j2
+    dest: /etc/unicorn.cfg
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 0600
+  tags: ['unicorn-config']
+
+- name: Add unicorn init script
+  template:
+    src: unicorn.init.j2
+    dest: "/etc/init.d/unicorn"
+    owner: root
+    group: root
+    mode: 0755
+  tags: ['unicorn-config', 'rails-env']
+
+- name: Just force systemd to reread configs
+  ansible.builtin.systemd:
+    daemon_reload: true
+  tags: ['unicorn-config', 'rails-env']
+
+- name: enable unicorn service
+  ansible.builtin.sysvinit:
+    name: "unicorn"
+    state: restarted
+    enabled: yes
+  ignore_errors: True
+  tags: ['unicorn-config']

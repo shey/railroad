@@ -1,0 +1,32 @@
+- name: add nginx base configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: www-data
+    group: www-data
+  tags: ['nginx', 'nginx-config']
+
+- name: add nginx ssl configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: www-data
+    group: www-data
+  tags: ['nginx', 'nginx-config']
+
+- name: add nginx ssl configuration
+  template:
+    src: ssl.conf.j2
+    dest: /etc/nginx/conf.d/ssl.conf
+    owner: www-data
+    group: www-data
+  when: using_ssl is defined and using_ssl == True
+  tags: ['nginx', 'nginx-config']
+
+- name: stop the nginx service
+  service:
+    name: nginx
+    enabled: yes
+    state: restarted
+  ignore_errors: true
+  tags: ['nginx', 'nginx-config']

@@ -1,0 +1,6 @@
+- name: create system users
+  include_role:
+    name: users
+  with_items: "{{ users }}"
+  loop_control:
+    loop_var: username

@@ -1,0 +1,47 @@
+# username variable supplied by custom-users
+
+- name: generate password for user
+  shell: makepasswd --chars=128
+  register: user_password
+  no_log: True
+
+- name: Create group for {{ username }}
+  group:
+    name: "{{ username }}"
+    state: present
+
+- name: create a user
+  user:
+    name: "{{ username }}"
+    createhome: yes
+    shell: /bin/bash
+    password: "{{ user_password.stdout | password_hash('sha512') }}"
+    state: present
+    groups: [ '{{ username }}' ]
+
+- name: create ssh directory for {{ username }}
+  become_user: "{{ username }}"
+  file:
+    path: ~/.ssh
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0700
+    state: directory
+
+- name: add ssh keys {{ username }}
+  template:
+    src: authorized_keys.j2
+    dest: /home/{{ username }}/.ssh/authorized_keys
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0600
+
+- name: give user sudoers permissions if allowed
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/{{ username }}
+    owner: root
+    group: root
+    mode: 0600
+  when: users[username].sudo == true
+

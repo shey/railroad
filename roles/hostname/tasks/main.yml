@@ -1,0 +1,9 @@
+- name: "update hostname"
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: set the hostname in /etc/hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    mode: 0644

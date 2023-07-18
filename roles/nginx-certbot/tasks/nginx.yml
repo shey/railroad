@@ -1,0 +1,22 @@
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: setup a directory for wellknow verification
+  file:
+    path: /var/www/letsencrypt/.well-known/acme-challenge
+    state: directory
+    recurse: true
+
+# first acquire the cert with this nginx configuration.
+- name: add site configuration for cerbot/well-known authentication
+  template:
+    src: default.j2
+    dest: /etc/nginx/sites-available/default
+
+- name: restart the nginx service
+  service:
+    name: nginx
+    enabled: yes
+    state: restarted

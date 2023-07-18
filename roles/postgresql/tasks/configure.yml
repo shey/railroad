@@ -1,0 +1,14 @@
+- name: update postgresql.conf
+  template:
+    src: postgresql.conf.j2
+    dest: /etc/postgresql/15/main/postgresql.conf
+    mode: 0644
+    owner: postgres
+    group: postgres
+  tags: ['postgres-config']
+
+- name: reload postgresql service
+  ansible.builtin.service:
+    name: postgresql
+    state: reloaded
+  tags: ['postgres-config']

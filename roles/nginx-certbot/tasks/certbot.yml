@@ -1,0 +1,14 @@
+- name: Install and configure certbot
+  block:
+    - name: Install certbot
+      apt:
+        name: certbot
+        state: present
+
+    - name: execute certbot
+      shell: |
+        certbot certonly --non-interactive --agree-tos --expand  \
+          -m "{{ admin_email }}" --domain {{ server_name }}       \
+          --webroot --webroot-path "/var/www/letsencrypt/"
+
+  when: using_ssl is defined and using_ssl == True

@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+
+AcceptEnv LANG LC_*
+GSSAPIAuthentication no
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+UsePAM no
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+Port 22
+PrintMotd no
+Protocol 2
+Subsystem sftp /usr/lib/openssh/sftp-server
+SyslogFacility AUTH
+LogLevel VERBOSE
+X11Forwarding no
+UseDNS no
+
+# Keep alive ssh connections by sending a packet every 2 minutes.
+ClientAliveInterval 120

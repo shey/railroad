@@ -1,0 +1,9 @@
+## {{ ansible_managed }}
+
+ssl_protocols                   TLSv1.3;
+ssl_session_cache               shared:SSL:10m;
+ssl_session_timeout             10m;
+ssl_prefer_server_ciphers       on;
+
+ssl_certificate                 /etc/letsencrypt/live/{{ server_name }}/fullchain.pem;
+ssl_certificate_key             /etc/letsencrypt/live/{{ server_name }}/privkey.pem;

@@ -1,0 +1,25 @@
+- name: add apt key
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- name: add repo
+  apt_repository:
+    repo: deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main
+    state: present
+
+- name: add packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: [
+    postgresql-15,
+    postgresql-client-15,
+    postgresql-contrib,
+    postgresql-client-common,
+    postgresql-common,
+    ssl-cert,
+    sysstat,
+    libpq-dev,
+    libpq5,
+  ]

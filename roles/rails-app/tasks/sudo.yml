@@ -1,0 +1,7 @@
+- name: give limited rights to {{ app_user }} user
+  template:
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ app_user }}"
+    owner: root
+    group: root
+    mode: 0600

@@ -1,0 +1,7 @@
+prod-app01 ansible_user=root ansible_host=$YOUR_HOST_IP_ADDRESS
+
+[appservers]
+prod-app01
+
+[production:children]
+appservers

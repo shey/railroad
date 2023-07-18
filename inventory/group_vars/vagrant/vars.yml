@@ -1,0 +1,32 @@
+# user keys:
+users:
+  # same as app_user
+  rails:
+    sudo: false
+    ssh_key:
+     - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAhLwOu11GmTZ1vOormmaygACw2bCQaj22kwFH05dNtLhJrGgzhiAJxmoKNje9+PFx1d8LHLL2ydycD2Tta+uIDSxzqHkH7yN2guYB0sebvKb3fkdV+SR7/UbwTC7BSLVol2Eu4twhPnhnrNOWcba89HIPytBJHm/JmaLUTfryD+QkxaRIKo/qUS7DwXTE1dGO5r+Hg4DN2fWOJQxkEiiuUrAS9d8RwXvktFgKDKCy7Gw0TcnyWccG4MTPMliY3QELDY0sMhuMIGnx8UGHD547AsxnJ8fEW6K+LzzjQIVRPCymDBIO1T8Ue/NEjrTpj8BANhxZlqq8UBG9bOQf3kGmOIlCOBz4lZQpi3ahKHbmHi5LojhiOlpeKJk+miHgEJ7lzFVesB7On7T2HB/D8BALvN3g2LPJP0oxYIEjvA0dd64+8jbyo59xGLQBvP9dxIAsJjoXdUAhMRBfww9XiIylz5fXCnDt4mvNiq//JqKidsDIeg/Y5Vs45JBa5PFi8Rc= shey@shey.ca"
+  shey:
+      sudo: true
+      ssh_key:
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAhLwOu11GmTZ1vOormmaygACw2bCQaj22kwFH05dNtLhJrGgzhiAJxmoKNje9+PFx1d8LHLL2ydycD2Tta+uIDSxzqHkH7yN2guYB0sebvKb3fkdV+SR7/UbwTC7BSLVol2Eu4twhPnhnrNOWcba89HIPytBJHm/JmaLUTfryD+QkxaRIKo/qUS7DwXTE1dGO5r+Hg4DN2fWOJQxkEiiuUrAS9d8RwXvktFgKDKCy7Gw0TcnyWccG4MTPMliY3QELDY0sMhuMIGnx8UGHD547AsxnJ8fEW6K+LzzjQIVRPCymDBIO1T8Ue/NEjrTpj8BANhxZlqq8UBG9bOQf3kGmOIlCOBz4lZQpi3ahKHbmHi5LojhiOlpeKJk+miHgEJ7lzFVesB7On7T2HB/D8BALvN3g2LPJP0oxYIEjvA0dd64+8jbyo59xGLQBvP9dxIAsJjoXdUAhMRBfww9XiIylz5fXCnDt4mvNiq//JqKidsDIeg/Y5Vs45JBa5PFi8Rc= shey@shey.ca"
+
+## uncomment the following and
+## set using_ssl to True to enable
+## SSL via Certbot/Letsencrypt
+# using_ssl: False
+# admin_email: "shey@shey.ca"
+# server_name: "app.domain.com"
+
+## rails app specific
+rails_env:          "production"
+app_user:           "rails"
+app_name:           "iname"
+database_name:      "{{ app_name }}_{{ rails_env }}"
+app_db_user_name:   "{{ app_user }}"
+app_db_name:        "{{ app_name }}"
+app_settings_dir:   "/home/{{ app_user }}/{{ app_name }}/shared"
+
+## Define these in inventory/vagrant/vault.yml
+## generate with rails secret
+# v_secret_key_base: "abcd"
+# v_app_db_user_password: "password"

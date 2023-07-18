@@ -1,0 +1,4 @@
+- name: enable https for apt
+  apt:
+    name: pg-activity
+    state: latest

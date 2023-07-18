@@ -1,0 +1,26 @@
+- name: ensure pg lib installed globally for ansible
+  pip:
+    name: psycopg2
+    state: present
+  tags: ['postgresql']
+
+- name: "create {{ app_name }} database user"
+  postgresql_user:
+    name: "{{ app_db_user_name }}"
+    password: "{{ v_app_db_user_password }}"
+  become_user: postgres
+  become: yes
+  tags: ['postgresql']
+
+- name: "create {{ app_name }} database"
+  postgresql_db:
+    db: "{{ app_db_name }}_{{ rails_env }}"
+    owner: "{{ app_db_user_name }}"
+    encoding: 'UTF-8'
+    lc_collate: 'en_US.UTF-8'
+    lc_ctype: 'en_US.UTF-8'
+    template: 'template0'
+    state: present
+  become_user: postgres
+  become: yes
+  tags: ['postgresql']

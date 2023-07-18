@@ -1,0 +1,15 @@
+- name: setup and configure a rails host
+  hosts: appservers
+  become: yes
+  roles:
+    - { role: base, tags: ['base'] }
+    - { role: hostname, tags: ['hostname'] }
+    - { role: swap, tags: ['swap'] }
+    - { role: sshd, tags: ['sshd', 'config'] }
+    - { role: custom-users, tags: ['users'] }
+    - { role: python, tags: ['python']}
+    - { role: postgresql, tags: ['postgresql'] }
+    - { role: configure-app, tags: ['configure-app', 'app'] }
+    - { role: nginx-certbot, tags: ['certbot', 'nginx'] }
+    - { role: nginx-reverse-proxy, tags: ['nginx'] }
+    - { role: rails-app, tags: ['rails-app', 'app'] }

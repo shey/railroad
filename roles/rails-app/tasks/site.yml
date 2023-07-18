@@ -1,0 +1,24 @@
+- name: Add app nginx-site config
+  template:
+    src: site.j2
+    dest: "/etc/nginx/sites-available/{{ app_name }}"
+    owner: www-data
+    group: www-data
+    mode: 0644
+  tags: ['nginx', 'nginx-site-config']
+
+- name: enable app site
+  file:
+    src: "/etc/nginx/sites-available/{{ app_name }}"
+    dest: "/etc/nginx/sites-enabled/{{ app_name }}"
+    owner: www-data
+    group: www-data
+    state: link
+  tags: ['nginx', 'nginx-site-config']
+
+- name: reload nginx
+  service:
+    name: nginx
+    state: reloaded
+  tags: ['nginx', 'nginx-site-config']
+

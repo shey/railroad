@@ -1,0 +1,3 @@
+swap_file_path: /swapfile
+swap_file_size: 1G
+swap_swappiness: 5

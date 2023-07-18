@@ -1,0 +1,7 @@
+vagrant-app  ansible_user=vagrant ansible_host=192.168.56.41
+
+[appservers]
+vagrant-app
+
+[vagrant:children]
+appservers

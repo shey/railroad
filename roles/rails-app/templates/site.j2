@@ -1,0 +1,82 @@
+# {{ ansible_managed }}
+
+upstream unicorn {
+  server 127.0.0.1:3000 fail_timeout=0;
+}
+
+
+limit_req_zone $binary_remote_addr zone=zone_request_limit_second:10m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=zone_request_limit_minute:10m rate=30r/s;
+
+{% if using_ssl is defined and using_ssl == True %}
+server {
+  listen      {{ ansible_host }}:80;
+  server_name _;
+  return      301 https://$host$request_uri;
+}
+{% endif %}
+
+
+server {
+  {% if using_ssl is defined and using_ssl == True %}
+  listen                  {{ ansible_host }}:443 ssl http2;
+  add_header Strict-Transport-Security    "max-age=31536000; includeSubdomains";
+  {% else %}
+  listen                  {{ ansible_host }}:80;
+  {% endif %}
+
+  server_name             _;
+  client_max_body_size    10M;
+  access_log              /var/log/nginx/{{ app_name }}.access.log custom;
+  error_log               /var/log/nginx/{{ app_name }}.error.log notice;
+
+  add_header X-Content-Type-Options       "nosniff";
+  add_header X-XSS-Protection             "1; mode=block";
+
+  # avoid sending upstream to the app.
+  location ~ (\.php|\.aspx|\.asp|myadmin) {
+    return 404;
+  }
+
+  # Use Nginx to serve precompiled assets
+  location ~ ^/(assets)/  {
+    root /home/{{ app_user }}/{{ app_name }}/current/public;
+    # Uncomment to enable caching
+    # expires max;
+    # add_header Cache-Control private;
+  }
+
+  # to support certbot
+  location ^~ /.well-known/acme-challenge/ {
+    default_type "text/plain";
+    root /var/www/letsencrypt;
+  }
+
+  location / {
+    proxy_set_header        Host                  $host;
+    proxy_set_header        X-Real-IP             $remote_addr;
+    proxy_set_header        X-Forwarded-For       $proxy_add_x_forwarded_for;
+    proxy_set_header        X-Forwarded-Proto     $scheme;
+    proxy_set_header        X-Request-Start       "t=${msec}";
+    proxy_redirect off;
+
+    #########################################################
+    ## Rate limiting
+    #########################################################
+    limit_req zone=zone_request_limit_second burst=3 nodelay;
+    limit_req zone=zone_request_limit_minute burst=5 nodelay;
+    limit_req_status 429;
+
+    if (!-f $request_filename) {
+      proxy_pass http://unicorn;
+      break;
+    }
+  }
+
+  # Rails error pages
+  error_page 500 502 503 504 /500.html;
+
+  location = /500.html {
+    root /home/{{ app_user }}/{{ app_name }}/current/public;
+  }
+}

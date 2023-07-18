@@ -1,0 +1,79 @@
+#!/bin/sh
+
+## {{ ansible_managed }}
+
+### BEGIN INIT INFO
+# Provides:          unicorn
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Should-Start:      $named
+# Default-Start:
+# Default-Stop:
+# Short-Description: unicorn application server
+# Description:       serves rails
+### END INIT INFO
+
+set -e
+
+. /lib/lsb/init-functions
+
+# adapted from http://gist.github.com/308216 and
+# http://wiki.nginx.org/Nginx-init-ubuntu
+APP_ROOT=/home/{{ app_user }}/{{ app_name }}/current
+PID=/home/{{ app_user }}/{{ app_name }}/shared/pids/unicorn.pid
+OLD_PID="$PID.oldbin"
+ENV={{ rails_env }}
+OWNER={{ app_user }}
+DAEMON="$APP_ROOT/bin/unicorn"
+UNICORN_CONF=/etc/unicorn.cfg
+RACKUP_CONF="$APP_ROOT/config.ru"
+PATH="/home/$OWNER/.rbenv/shims:/home/$OWNER/.rbenv/bin:$PATH"
+
+cd $APP_ROOT || exit 1
+
+start_unicorn () {
+  start-stop-daemon --start --quiet --chdir $APP_ROOT --chuid $OWNER --pidfile $PID --background --exec "/bin/bash" -- \
+                        -c "$DAEMON -c $UNICORN_CONF -E $ENV $RACKUP_CONF 2>&1 | logger -t [rails-web]"
+  log_end_msg $?
+}
+
+sig () {
+  test -s "$PID" && kill -$1 `cat $PID`
+}
+
+oldsig () {
+  test -s $OLD_PID && kill -$1 `cat $OLD_PID`
+}
+
+case $1 in
+start)
+  sig 0 && echo >&2 "Already running" && exit 0
+  start_unicorn
+  ;;
+stop)
+  sig QUIT && exit 0
+  echo >&2 "Not running"
+  ;;
+force-stop)
+  sig TERM && exit 0
+  echo >&2 "Not running"
+  ;;
+restart|reload)
+  sig HUP && echo reloaded OK && exit 0
+  echo >&2 "Couldn't reload, starting unicorn instead"
+  start_unicorn
+  ;;
+upgrade)
+  sig USR2 && exit 0
+  echo >&2 "Couldn't upgrade, starting unicorn instead"
+  start_unicorn
+  ;;
+rotate)
+  sig USR1 && echo rotated logs OK && exit 0
+  echo >&2 "Couldn't rotate logs" && exit 1
+  ;;
+*)
+  echo >&2 "Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
+  exit 1
+  ;;
+esac

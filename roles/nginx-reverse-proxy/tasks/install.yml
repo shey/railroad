@@ -1,0 +1,12 @@
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Ensure Nginx directories are created
+  file:
+    path: /etc/nginx/{{item}}
+    state: directory
+  with_items:
+    - sites-available
+    - sites-enabled

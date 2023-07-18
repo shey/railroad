@@ -1,0 +1,10 @@
+- name: Add deadsnakes repo
+  apt_repository:
+    repo: "ppa:deadsnakes/ppa"
+  tags: ['python']
+
+- name: Install python (this will also install ubuntu's base python)
+  apt:
+    name: [ python3.11, python3.11-dev, python3.11-venv, python3-pip]
+    state: present
+  tags: ['python']

@@ -1,0 +1,19 @@
+- name: setup the shared directory structure
+  file:
+    path: "/home/{{ app_user}}/{{ app_name }}/{{ item }}"
+      state: directory
+      owner: "{{ app_user }}"
+      group: "{{ app_user }}"
+      recurse: true
+  with_items:
+    - releases
+    - shared
+
+- name: setup remaining shared directory structure
+  file:
+    path: "/home/{{ app_user }}/{{ app_name }}/shared/{{item}}"
+      state: directory
+      owner: "{{ app_user }}"
+      group: "{{ app_user }}"
+      recurse: true
+  with_items: ['bundle', 'log', 'pids', 'public']

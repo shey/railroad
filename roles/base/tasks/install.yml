@@ -1,0 +1,51 @@
+
+- name: enable https for apt
+  apt:
+    name: apt-transport-https
+    state: latest
+    update_cache: yes
+    cache_valid_time: 9900
+
+- name: Ensure the system can use the HTTPS transport for APT
+  stat:
+    path: /usr/lib/apt/methods/https
+
+- name: Install packages
+  apt:
+    state: latest
+    update_cache: yes
+    name: [
+      build-essential,
+      curl,
+      htop,
+      libc6-dev,
+      libcurl4-openssl-dev,
+      libffi-dev,
+      libgdbm-dev,
+      libreadline6-dev,
+      libssl-dev,
+      libtool,
+      libxml2-dev,
+      libxslt-dev,
+      libyaml-dev,
+      ncurses-dev,
+      openssl,
+      pkg-config,
+      unzip,
+      vim-nox,
+      wget,
+      iotop,
+      ack-grep,
+      tmux,
+      git,
+      socat,
+      update-notifier-common,
+      makepasswd,
+      whois,
+      net-tools,
+      debian-keyring,
+      debian-archive-keyring,
+      fail2ban,
+      locate,
+      inotify-tools
+    ]

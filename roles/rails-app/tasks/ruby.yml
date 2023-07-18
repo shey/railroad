@@ -1,0 +1,57 @@
+- name: checkout rbenv_repo for selected users
+  git:
+    repo: 'https://github.com/rbenv/rbenv.git'
+    dest: '/home/{{ app_user }}/.rbenv'
+    version: 'v1.2.0'
+    accept_hostkey: yes
+    force: yes
+  become: yes
+  become_user: "{{ app_user }}"
+
+- name: add rbenv initialization to profile system-wide
+  template:
+    src: rbenv_user.sh.j2
+    dest: /etc/profile.d/rbenv.sh
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+
+- name: Check if ruby-build exists
+  stat:
+    path: "/home/{{ app_user }}/.rbenv/plugins/ruby-build"
+  register: ruby_build_check
+
+- name: Clone ruby-build for the deploy user
+  git:
+    repo: "https://github.com/rbenv/ruby-build.git"
+    dest: "/home/{{ app_user }}/.rbenv/plugins/ruby-build"
+    update: "yes"
+    accept_hostkey: "yes"
+  when: not ruby_build_check.stat.exists
+
+- name: Set ownership on rbenv
+  file:
+    path: "/home/{{ app_user }}/.rbenv/"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    recurse: "yes"
+
+- name: Set owership on ruby-build
+  file:
+    path: "/home/{{ app_user }}/.rbenv/ruby-build"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    recurse: "yes"
+
+- name: install ruby 3.1.2
+  ansible.builtin.shell:
+    cmd: "/home/{{ app_user }}/.rbenv/bin/rbenv install -s -v 3.1.2"
+  become_user: "{{ app_user }}"
+  become: yes
+
+- name: make ruby 3.1.2 the global default (for this user)
+  ansible.builtin.shell:
+    cmd: "/home/{{ app_user }}/.rbenv/bin/rbenv global 3.1.2"
+  become_user: "{{ app_user }}"
+  become: yes

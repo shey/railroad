@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn start
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn stop
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn restart
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn reload
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn upgrade
