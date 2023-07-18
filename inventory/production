@@ -1,4 +1,4 @@
-prod-app01 ansible_user=root ansible_host=$YOUR_HOST_IP_ADDRESS
+prod-app01 ansible_user=root ansible_host=1.1.1.1
 
 [appservers]
 prod-app01

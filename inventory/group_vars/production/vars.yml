@@ -15,8 +15,9 @@ users:
 ## admin_email to your email address
 ## to enable SSL via Certbot/Letsencrypt
 using_ssl: True
-admin_email: "shey@shey.ca"
-server_name: "outage.name"
+server_name: "myappdomain.com"
+admin_email: "me@myappdomain.com"
+
 
 # rails app specific
 rails_env:          "production"
