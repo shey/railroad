@@ -21,6 +21,10 @@ password_file:
 	@read PASSWORD; \
 	echo $$PASSWORD > .password_file
 
+.PHONY: ansible_vaults
+ansible_vaults: password_file ## Create a new vault file
+	ansible-vault create inventory/group_vars/$(ENV)/vault.yml
+
 build: ## Run the build playbook against the selected enviornment
 	ansible-playbook -i inventory/$(ENV) playbooks/build.yml -v --diff
 
