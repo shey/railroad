@@ -1,6 +1,6 @@
-# rails-ubuntu-ansible
+# Railroad
 
-Welcome to the Rails-Ubuntu-Ansible project! This project comprises an Ansible Playbook and associated roles to help you configure a Rails 7 environment (Rbenv, Nginx, LetsEncrypt/TLS, Unicorn, and Postgres) on a Ubuntu 20.04 host. The following guide will walk you through the setup process step-by-step.
+Welcome to the _Railroad_. This project comprises an Ansible Playbook and associated roles to help you configure a Rails 7 environment (Rbenv, Nginx, LetsEncrypt/TLS, Unicorn, and Postgres) on a Ubuntu 20.04 host. The following guide will walk you through the setup process step-by-step.
 
 ### Installing Ansible
 1. Create a local Python virtual environment with `make venv`.
