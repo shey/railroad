@@ -1,6 +1,13 @@
-# rails-ubuntu-ansible
+# railroad
 
-Welcome to the Rails-Ubuntu-Ansible project! This project comprises an Ansible Playbook and associated roles to help you configure a Rails 7 environment (Rbenv, Nginx, LetsEncrypt/TLS, Unicorn, and Postgres) on a Ubuntu 20.04 host. The following guide will walk you through the setup process step-by-step.
+Welcome to Railroad! A Ansible repository with playbooks and roles to help you configure a Rails 7 environment (Rbenv, Nginx, LetsEncrypt/TLS, Unicorn, and Postgres) on a Ubuntu 20.04 host.
+
+## Usage Notes
+### Idempotency
+
+The build.yml playbook, as currently set up, is not idempotent. The most effective way to utilize this playbook is through tag slicing. For instance, to update the nginx config for the Rails app, you should run `ansible-playbook -i inventory/production playbooks/build.yml -v --diff --tags=nginx-site-config`.
+
+To achieve idempotency, you can move the destructive roles into a separate playbook. The prime candidates for this move would be the `nginx-reverse-proxy` and `nginx-certbot` roles. Furthermore, implementing logic to determine when to reload a service, rather than restarting it, could also improve idempotency.
 
 ### Installing Ansible
 1. Create a local Python virtual environment with `make venv`.
@@ -32,6 +39,14 @@ pkill ssh-agent && eval `ssh-agent` && ssh-add ~/.ssh/id_rsa.
 
 Update your .ssh/config to enable KeyForwarding to your host. See [GitHub's SSH agent forwarding guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/using-ssh-agent-forwarding).
 
+#### Running Ansible
+Once you've confirmed access, run the `ansible-playbook` command to apply the roles and confgs to the production server.
+
+```sh
+ansible-playbook -i inventory/production playbooks/build.yml -v --diff
+```
+
 ### Caution
 1. Always protect your host with a firewall.
 1. The method for handling secrets is best suited for a one or two-person team.
+1. The `build.yml` playbook is not idempotent.
