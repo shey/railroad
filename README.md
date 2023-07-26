@@ -1,6 +1,6 @@
 # railroad
 
-Welcome to Railroad. A repository with Ansible playbooks and roles to configure a Ubuntu 20.04 server with a Rails 7 environment (Rbenv, Nginx, LetsEncrypt/TLS, Unicorn, and Postgres).
+Welcome to Railroad, [Railcar's companion project](https://github.com/shey/railcar). A repository with Ansible playbooks and roles to configure a Ubuntu 20.04 server with a Rails 7 environment (Rbenv, Nginx, LetsEncrypt/TLS, Unicorn, and Postgres).
 
 ## Usage Notes
 ### Idempotency
