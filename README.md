@@ -9,6 +9,23 @@ The build.yml playbook, as currently set up, is not idempotent. The most effecti
 
 To achieve idempotency, you can move the destructive roles into a separate playbook. The prime candidates for this move would be the `nginx-reverse-proxy` and `nginx-certbot` roles. Furthermore, implementing logic to determine when to reload a service, rather than restarting it, could also improve idempotency.
 
+### Deployment
+#### Preparing SSH-Agent
+Ensure ssh-agent is operational by running:
+```
+pkill ssh-agent && eval `ssh-agent` && ssh-add ~/.ssh/id_rsa.
+```
+
+Update your .ssh/config to enable KeyForwarding to your host. See [GitHub's SSH agent forwarding guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/using-ssh-agent-forwarding).
+
+#### Running Ansible
+After configuring the project, run the `ansible-playbook` command to apply the roles and confgs to the production server.
+
+```sh
+ansible-playbook -i inventory/production playbooks/build.yml -v --diff
+```
+
+## Installation and Configuration
 ### Installing Ansible
 1. Create a local Python virtual environment with `make venv`.
 1. Activate the environment using `source venv/bin/activate`.
@@ -29,22 +46,6 @@ This project uses [Ansible Vault](https://docs.ansible.com/ansible/latest/vault_
 #### SSH Keys Configuration
 1. Update `ssh_key` for rails user in `inventory/group_vars/production/vars.yml` with your public SSH key.
 1. Replace _shey_ with your preferred login username and update the `ssh_key`.
-
-### Deployment
-#### Preparing SSH-Agent
-Ensure ssh-agent is operational by running:
-```
-pkill ssh-agent && eval `ssh-agent` && ssh-add ~/.ssh/id_rsa.
-```
-
-Update your .ssh/config to enable KeyForwarding to your host. See [GitHub's SSH agent forwarding guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/using-ssh-agent-forwarding).
-
-#### Running Ansible
-Once you've confirmed access, run the `ansible-playbook` command to apply the roles and confgs to the production server.
-
-```sh
-ansible-playbook -i inventory/production playbooks/build.yml -v --diff
-```
 
 ### Caution
 1. Always protect your host with a firewall.
