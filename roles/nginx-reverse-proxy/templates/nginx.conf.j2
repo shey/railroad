@@ -17,8 +17,8 @@ http {
   default_type  application/octet-stream;
   access_log    /var/log/nginx/access.log;
 
-  # from https://www.velebit.ai/blog/nginx-json-logging/
-  log_format custom escape=json '{"source": "nginx", "time": $msec, "resp_body_size": $body_bytes_sent, "host": "$http_host", "address": "$remote_addr", "request_length": $request_length, "method": "$request_method", "uri": "$request_uri", "status": $status,  "user_agent": "$http_user_agent", "resp_time": $request_time, "upstream_addr": "$upstream_addr"}';
+  # modified version, original: https://www.velebit.ai/blog/nginx-json-logging/
+  log_format custom escape=json '{"source": "nginx", "time": "$time_iso8601", "resp_body_size": $body_bytes_sent, "host": "$http_host", "address": "$remote_addr", "request_length": $request_length, "method": "$request_method", "uri": "$request_uri", "status": $status,  "user_agent": "$http_user_agent", "referrer" : "$http_referer", "resp_time": "$request_time", "upstream_addr": "$upstream_addr"}';
 
   sendfile      on;
   tcp_nopush    on;

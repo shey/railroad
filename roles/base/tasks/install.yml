@@ -47,5 +47,7 @@
       debian-archive-keyring,
       fail2ban,
       locate,
-      inotify-tools
+      inotify-tools,
+      jq
     ]
+  tags: ['base-packages']
