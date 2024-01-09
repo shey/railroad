@@ -2,5 +2,6 @@
 - include: sudo.yml
 - include: ruby.yml
 - include: unicorn.yml
-- include: site.yml
-
+- include: sidekiq.yml
+- include: site.yml # nginx
+- include: cron.yml

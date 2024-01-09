@@ -1,0 +1,32 @@
+- name: Add sidekiq systemd file
+  template:
+    src: sidekiq.service.j2
+    dest: "/lib/systemd/system/sidekiq.service"
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  tags: ['sidekiq-config', 'rails-env', 'sidekiq']
+
+- name: Force systemd to reread configs
+  ansible.builtin.systemd:
+    daemon_reload: true
+  tags: ['sidekiq-config', 'rails-env', 'sidekiq']
+
+- name: start/enable sidekiq
+  systemd:
+    name: "sidekiq"
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  become: true
+  no_log: true
+  tags: ['systemd', 'sidekiq-config', 'restart-app', 'sidekiq']
+
+- name: Allow traffic to 9394 on internal network for sidekiq exporter
+  community.general.ufw:
+    rule: allow
+    interface: "{{ vpc_interface_name }}"
+    direction: in
+    port: 9394
+  tags: ['firewall', 'sidekiq_exporter-firewall']
