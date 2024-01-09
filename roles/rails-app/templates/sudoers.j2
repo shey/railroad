@@ -1,7 +1,14 @@
 # {{ ansible_managed }}
 
+# unicorn/rails
 {{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn start
 {{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn stop
 {{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn restart
 {{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn reload
 {{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service unicorn upgrade
+
+# sidekiq
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service sidekiq start
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service sidekiq stop
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service sidekiq restart
+{{ app_user }} ALL=(ALL) NOPASSWD:/usr/sbin/service sidekiq reload

@@ -1,0 +1,10 @@
+# 8 UTC is 3 EST
+- name: dummy cron job
+  ansible.builtin.cron:
+    name: "dummy-job"
+    minute: "4"
+    hour: "8"
+    job: "/bin/bash -lc \"echo true\"  2>&1 | logger -t [rails-cron]"
+  become_user: "{{ app_user }}"
+  become: yes
+  tags: ['cron', 'rails-cron']

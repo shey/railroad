@@ -5,3 +5,4 @@
     owner: root
     group: root
     mode: 0600
+  tags: ['sudoers', 'rails-env', 'rails-app', 'sidekiq']

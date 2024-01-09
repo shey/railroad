@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=sidekiq
+Requires=network-online.target
+
+[Service]
+User={{ app_user }}
+Group={{ app_user }}
+
+Environment=MALLOC_ARENA_MAX=2
+WorkingDirectory=/home/{{ app_user }}/{{ app_name }}/current
+# todo: move sidekiq config out of app/user land
+ExecStart=/home/{{ app_user }}/.rbenv/shims/bundle exec sidekiq -e production -C config/sidekiq.yml
+ExecReload=/usr/bin/kill -TSTP $MAINPID
+
+KillMode=process
+Restart=always
+
+# This will default to "bundler" if not specified
+SyslogIdentifier=rails-sidekiq
+
+[Install]
+WantedBy=multi-user.target
